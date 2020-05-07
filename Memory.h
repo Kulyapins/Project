@@ -54,24 +54,3 @@ void w_write(Adress adr, word w) {
 	mem[adr] = w;
 	mem[adr + 1] = w >> 8;
 }
-
-void load_file() {
-	FILE *data = NULL;
-	Adress adr;
-	unsigned int x;
-	word N;
-	data = fopen("D:/data.o", "r");
-	
-	if (data == NULL) {
-		perror("data.o");
-		exit(1);
-	}
-
-	while (fscanf(data, "%hx%hx", &adr, &N) == 2) {
-		for (int i = 0; i < N; i++) {
-			fscanf(data, "%x", &x);
-			b_write(adr + i, x);
-		}
-	}
-	fclose(data);
-}
