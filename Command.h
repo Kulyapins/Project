@@ -64,7 +64,7 @@ void do_mov() {
 void do_nothing() {}
 
 Command cmd[] = {
-	{0170000, 0010000, "mov", do_move},
+	{0170000, 0010000, "mov", do_mov},
 	{0170000, 0060000, "add", do_add},
 	{0170000, 0000000, "halt", do_halt},
-}
+};
