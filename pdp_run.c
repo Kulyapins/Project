@@ -29,10 +29,15 @@ void run() {
 		word w = w_read(pc);
 		printf("%06o %06o", pc, w);
 		pc = pc + 2;
-		if (w == 0) {
-			printf("halt ");
-			do_halt();
+		dd = get_mr(w);
+		ss = get_mr(w >> 6);
+		for (int i = 0; i < sizeof(cmd)/sizeof(cmd[0]); i++) {
+			if ((w & cmd[i].mask) == cmd[i].opcode) {
+				cmd[i].do_func();
+				printf("\n");
+			}
 		}
+	}
 }
 
 int main(int argc, char * argv[]) {
