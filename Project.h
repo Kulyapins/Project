@@ -36,12 +36,6 @@ void test_mem() {
 	assert(wres2 == w);
 }
 
-int main(int argc, char * argv[]) {
-	load_file();
-	test_mem();
-	return 0;
-}
-
 void b_write(Adress adr, byte b) {
 	mem[adr] = b;
 }
