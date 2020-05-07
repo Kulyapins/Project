@@ -53,7 +53,8 @@ void do_halt() {
 
 void do_add() {
 	printf("add\n");
-	
+	dd.val = ss.val + dd.val;
+	w_write(dd.adr, ss.val);
 }
 
 void do_mov() {
