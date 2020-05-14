@@ -7,6 +7,7 @@ typedef struct {
 	word opcode;
 	char * name;
 	void (*do_func)(void);
+	int argum;
 } Command;
 
 typedef struct {
@@ -15,15 +16,17 @@ typedef struct {
 } Arg;
 Arg ss, dd;
 
+byte typemem = to_mem;
 Arg get_mr(word w) {
 	Arg res;
-	int r = w & 3; //номер регистра
+	int r = w & 7; //номер регистра
 	int mode = (w >> 3) & 7; //номер моды
 	switch (mode) {
-		case 0:              //R3
+		case 0:              //R0
 			res.adr = r;
 			res.val = reg[r];
 			printf("R%o ", r);
+			typemem = to_reg;
 			break;
 		case 1:              //(R3)
 			res.adr = reg[r];
@@ -46,26 +49,34 @@ Arg get_mr(word w) {
 	return res;
 }
 
+void print_reg() {
+	for (int i = 0; i < 8; i++ ) {
+		printf(" R%d, %06ho \n", i, reg[i]);
+	}
+}
+
 void do_halt() {
-	printf("THE END\n");
+	//printf("THE END\n");
+	print_reg;
 	exit(0);
 }
 
 void do_add() {
-	printf("add\n");
+	//printf("add\n");
 	dd.val = ss.val + dd.val;
-	w_write(dd.adr, ss.val);
+	w_write(dd.adr, ss.val, typemem);
 }
 
 void do_mov() {
-	printf("mov\n");
-	w_write(dd.adr, ss.val);
+	//printf("mov\n");
+	w_write(dd.adr, ss.val, typemem);
 }
 
 void do_nothing() {}
 
+
 Command cmd[] = {
-	{0170000, 0010000, "mov", do_mov},
-	{0170000, 0060000, "add", do_add},
-	{0170000, 0000000, "halt", do_halt},
+	{0170000, 0010000, "mov", do_mov, (ss1 | dd2)},
+	{0170000, 0060000, "add", do_add, (ss1 | dd2)},
+	{0170000, 0000000, "halt", do_halt, zero},
 };
