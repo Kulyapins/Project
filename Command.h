@@ -2,20 +2,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-typedef struct {
-	word mask;
-	word opcode;
-	char * name;
-	void (*do_func)(void);
-	int argum;
-} Command;
-
-typedef struct {
-	word val; //значение аргумента
-	word adr; //адрес аргумента
-} Arg;
-Arg ss, dd;
-
 Arg get_mr(word w) {
 	Arg res;
 	int r = w & 7; //номер регистра
@@ -47,31 +33,20 @@ Arg get_mr(word w) {
 	return res;
 }
 
-void print_reg() {
-	for (int i = 0; i < 8; i++ ) {
-		printf(" R%d, %06ho \n", i, reg[i]);
-	}
-}
-
 void do_halt() {
-	//printf("THE END\n");
-	print_reg;
 	exit(0);
 }
 
 void do_add() {
-	//printf("add\n");
 	dd.val = ss.val + dd.val;
 	w_write(dd.adr, ss.val);
 }
 
 void do_mov() {
-	//printf("mov\n");
 	w_write(dd.adr, ss.val);
 }
 
 void do_nothing() {}
-
 
 Command cmd[] = {
 	{0170000, 0010000, "mov", do_mov, (ss1 | dd2)},
