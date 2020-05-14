@@ -27,12 +27,17 @@ void run() {
 	pc = 01000;
 	while(1) {
 		word w = w_read(pc);
-		printf("%06o %06o", pc, w);
+		printf("%06o %06o ", pc, w);
 		pc = pc + 2;
-		dd = get_mr(w);
-		ss = get_mr(w >> 6);
 		for (int i = 0; i < sizeof(cmd)/sizeof(cmd[0]); i++) {
 			if ((w & cmd[i].mask) == cmd[i].opcode) {
+				printf("%s ", cmd[i].name);
+				if (cmd[i].argum & ss1) {
+					ss = get_mr(w >> 6);
+				}
+				if (cmd[i].argum & dd2) {
+					dd = get_mr(w);
+				}
 				cmd[i].do_func();
 				printf("\n");
 			}
@@ -45,4 +50,3 @@ int main(int argc, char * argv[]) {
 	run();
 	return 0;
 }
-
