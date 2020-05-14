@@ -8,6 +8,15 @@ typedef word Adress;
 #define MEMSIZE (64*1024)
 
 byte mem[MEMSIZE];
+word reg[8]; //регистры 1..7
+#define pc reg[7]
+
+#define to_reg (0)
+#define to_mem (1)
+#define pc reg[7]
+#define zero 0
+#define ss1 1
+#define dd2 2
 
 void b_write(Adress adr, byte b);
 byte b_read(Adress adr);
@@ -37,7 +46,17 @@ void test_mem() {
 }
 
 void b_write(Adress adr, byte b) {
-	mem[adr] = b;
+	if (adr > 7) {  //в 64kb
+		mem[adr] = b;
+		
+	} else { //в регистры
+		if (b >> 7) {
+			reg[adr] = (0xFF00 | b);
+		}
+		else {
+			reg[adr] = (0xFF00 & b);
+		}
+	}
 }
 
 byte b_read(Adress adr) {
@@ -51,6 +70,14 @@ word w_read(Adress a) {
 }
 
 void w_write(Adress adr, word w) {
-	mem[adr] = w;
-	mem[adr + 1] = w >> 8;
+	if (adr > 15) { //в 64kb
+		byte b_w1 = ((byte) w);
+		byte b_w2 = ((byte) (w >> 8));
+		b_write(adr, b_w1);
+		b_write(adr + 1, b_w2);
+	}
+	else { //в регистры
+		reg[adr] = w;
+	}
 }
+
