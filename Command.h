@@ -16,7 +16,6 @@ typedef struct {
 } Arg;
 Arg ss, dd;
 
-byte typemem = to_mem;
 Arg get_mr(word w) {
 	Arg res;
 	int r = w & 7; //номер регистра
@@ -26,7 +25,6 @@ Arg get_mr(word w) {
 			res.adr = r;
 			res.val = reg[r];
 			printf("R%o ", r);
-			typemem = to_reg;
 			break;
 		case 1:              //(R3)
 			res.adr = reg[r];
@@ -64,12 +62,12 @@ void do_halt() {
 void do_add() {
 	//printf("add\n");
 	dd.val = ss.val + dd.val;
-	w_write(dd.adr, ss.val, typemem);
+	w_write(dd.adr, ss.val);
 }
 
 void do_mov() {
 	//printf("mov\n");
-	w_write(dd.adr, ss.val, typemem);
+	w_write(dd.adr, ss.val);
 }
 
 void do_nothing() {}
