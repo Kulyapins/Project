@@ -1,24 +1,36 @@
 #include "Command.c"
 #include <stdio.h>
 #include <stdlib.h>
+#include <error.h>
 
 void load_file(const char * way) {
     FILE *data = fopen(way, "r");
     Adress adr;
-    unsigned int x;
+    unsigned int x, k = 0, r = 0;
     word N;
 
     if (data == NULL) {
         perror(way);
-        exit(1);
+        exit(errno);
     }
-	
-    while (fscanf(data, "%hx%hx", &adr, &N) == 2) {
-        for(int i = 0; i < N; i++) {
-            fscanf(data, "%x", &x);
-            b_write(adr + i, x);
-        }
-    }
+    
+	while ((k = fscanf(data, "%hx%hx", &adr, &N) != EOF) && (k != 0)) {
+		r = 1;
+		if ((0 > adr) || (adr > MEMSIZE)){ 
+			fprintf(stderr, "Error adress\n");
+			exit(3);
+		}
+		for(int i = 0; i < N; i++) {
+			if (fscanf(data, "%x", &x) == 0) {
+				fprintf (stderr, "Zero bits\n");
+				exit(3);
+			}
+			b_write(adr + i, x);
+		}}
+		if (!r) {
+			fprintf (stderr, "Empty\n");
+			exit(3);
+		}
     fclose(data);
 }
 
@@ -53,4 +65,5 @@ int main(int argc, char * argv[]) {
 	run();
 	return 0;
 }
+
 
