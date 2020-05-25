@@ -1,26 +1,25 @@
-#include "Command.h"
+#include "Command.c"
 #include <stdio.h>
 #include <stdlib.h>
 
-void load_file() {
-	FILE *data = NULL;
-	Adress adr;
-	unsigned int x;
-	word N;
-	data = fopen("D:/data.o", "r");
-	
-	if (data == NULL) {
-		perror("data.o");
-		exit(1);
-	}
+void load_file(const char * way) {
+    FILE *data = fopen(way, "r");
+    Adress adr;
+    unsigned int x;
+    word N;
 
-	while (fscanf(data, "%hx%hx", &adr, &N) == 2) {
-		for (int i = 0; i < N; i++) {
-			fscanf(data, "%x", &x);
-			b_write(adr + i, x);
-		}
-	}
-	fclose(data);
+    if (data == NULL) {
+        perror(way);
+        exit(1);
+    }
+	
+    while (fscanf(data, "%hx%hx", &adr, &N) == 2) {
+        for(int i = 0; i < N; i++) {
+            fscanf(data, "%x", &x);
+            b_write(adr + i, x);
+        }
+    }
+    fclose(data);
 }
 
 void run() {
@@ -46,7 +45,12 @@ void run() {
 }
 
 int main(int argc, char * argv[]) {
-	load_file();
+	if(argv[1] == NULL){
+		printf("Write addres to file in cmd");
+		return 1;
+	}
+	load_file(argv[1]);
 	run();
 	return 0;
 }
+
